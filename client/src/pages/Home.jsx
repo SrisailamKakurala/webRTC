@@ -18,6 +18,10 @@ const Home = () => {
         socket.on('joined-room', (roomId) => {
             handleRoomJoin(roomId);
         })
+
+        return () => {
+            socket.off('joined-room', handleRoomJoin);
+        }
     }, [socket]);
 
 

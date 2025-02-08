@@ -13,6 +13,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const emailToSocketMapping = new Map();
+const socketToEmailMapping = new Map();
 
 
 io.on('connection', (socket) => {
@@ -26,6 +27,7 @@ io.on('connection', (socket) => {
 
         // Store socket ID for user
         emailToSocketMapping.set(email, socket.id);
+        socketToEmailMapping.set(socket.id, email);
 
         // Join the room
         socket.join(roomId);
@@ -38,6 +40,19 @@ io.on('connection', (socket) => {
 
         // Notify everyone in the room that a new user connected
         io.to(roomId).emit('user-connected', email);
+    });
+
+    socket.on('call-user', (data) => {
+        const { email, offer } = data;
+        const fromEmail = socketToEmailMapping.get(socket.id);
+        const socketId = emailToSocketMapping.get(email);
+        socket.to(socketId).emit('incoming-call', { fromEmail, offer });
+    });
+
+    socket.on('call-accepted', (data) => {
+        const { email, answer } = data;
+        const socketId = emailToSocketMapping.get(email);
+        socket.to(socketId).emit('call-accepted', { answer });
     });
 });
 
