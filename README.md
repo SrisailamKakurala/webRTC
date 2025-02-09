@@ -1,5 +1,8 @@
 # webRTC Zero to Hero
 
+![image](https://github.com/user-attachments/assets/4b28e56a-52ea-4163-9385-cad083bf185b)
+
+
 ### [**Syllabus**](./syllabus.md)
 
 ---
